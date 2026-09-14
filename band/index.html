@@ -1,0 +1,1466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Botanica Herbal Water · Prana</title>
+<meta name="description" content="Herbal infused water. Vetiver, cardamom, cinnamon, lemon and clove, cold infused. No preservatives, 100% vegan. 500ml and 1000ml.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%238C5A38'/><path d='M16 7c4 4 6 7 6 10a6 6 0 0 1-12 0c0-3 2-6 6-10z' fill='%23F5EFEC'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<!-- the brochure sets everything in exactly two faces: Erode (serif) and Manrope (sans) -->
+<link href="https://api.fontshare.com/v2/css?f%5B%5D=erode@300,400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/intro-poster.webp" media="(min-width: 861px)">
+<link rel="preload" as="image" href="assets/intro-poster-m.webp" media="(max-width: 860px)">
+<script>
+/* set before first paint, so the hero copy never flashes in ahead of the intro */
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-intro");
+</script>
+<link rel="stylesheet" href="scrollcraft.css">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   Botanica · the whole theme: six colours, two faces.
+   Canvas, surfaces and ink are sampled from Botanica Brochure_Retail.pdf,
+   The footage is left ungraded for now, so the clips keep their own warmth.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --sc-canvas:     #F5EFEC;
+  --sc-surface:    #ECE6E2;
+  --sc-ink:        #4D4B48;
+  --sc-ink-soft:   #6E6965;
+  /* The accent is the brochure's cardamom, the lightest of its warm tones.
+     It is light enough that ivory text would disappear on it, so the ink on
+     the accent is the brochure's near-black, and a deeper cinnamon from the
+     same family draws every edge and carries any accent-coloured text, where
+     the light tone could not reach 4.5:1 on ivory. */
+  --sc-accent:      #F3CBA6;   /* light peach: the fills */
+  --sc-accent-ink:  #2A2520;   /* the ink that sits on it */
+  --sc-accent-deep: #9A5430;   /* the same peach burnt down until it can carry
+                                  text on ivory and draw a visible edge */
+
+  --sc-font-display: "Erode", Georgia, "Times New Roman", serif;
+  --sc-font-text:    "Manrope", system-ui, sans-serif;
+
+  --sc-shadow-color: 28 14% 30%;
+  --bt-cream:  #ECE6E2;
+  --bt-peach-deep: #D8CEC7;
+  --bt-r: 4px;
+  /* the brochure's vertical band is 11.1% of the page width; the rail holds
+     that space permanently so nothing on the page runs underneath it */
+  --sc-rail: clamp(148px, 11.1vw, 196px);
+  /* clear air between any text and the band */
+  --sc-rail-gap: clamp(1.75rem, 3.2vw, 3.25rem);
+  /* the zone before the band in which a card shrinks away instead of being cut */
+  --sc-recede: 120px;
+}
+
+body { background: var(--sc-canvas); }
+
+/* Bold editorial: the display face carries real weight, tight and wide. */
+/* Erode is a serif and the brochure sets it Light for display and Medium for
+   sub-heads. A serif also needs far less negative tracking than the grotesque
+   this replaced. */
+.sc-display { font-weight: 500; letter-spacing: -0.008em; }
+.sc-body, p { font-weight: 400; }
+strong { font-weight: 600; }
+
+/* ── shop bar ─────────────────────────────────────────────── */
+.bar {
+  position: fixed; inset: 0 var(--sc-rail) auto 0; z-index: var(--sc-z-chrome);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--sc-4);
+  padding: var(--sc-3) var(--sc-gutter);
+  background: color-mix(in oklab, var(--bt-cream) 88%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid color-mix(in oklab, var(--sc-ink) 10%, transparent);
+}
+/* the wordmark is the brand's own lockup, lifted from the brochure as vector
+   and cut out, so it carries the real teal-to-yellow gradient and the leaf */
+.bar__mark { display: block; line-height: 0; text-decoration: none; }
+.bar__mark img { width: auto; height: clamp(24px, 2.6vw, 34px); display: block; }
+
+/* ── shop rail ─────────────────────────────────────────────────────────
+   Permanent: on screen at every scroll position, never hidden, never toggled.
+
+   Colour and translucency are measured off the vertical band in
+   Botanica Brochure_Retail.pdf. Solving inside = a*band + (1-a)*photo across
+   ~1100 usable rows on pages 1 and 4 gives band #ECE6E2 at alpha 0.77, and a
+   band width of 11.1% of the page. Print cannot blur, so neither does this. */
+.srail {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  z-index: calc(var(--sc-z-chrome) + 1);
+  width: var(--sc-rail);
+  display: flex; flex-direction: column;
+  background: rgba(235, 229, 226, 0.77);
+  border-left: 1px solid rgba(120, 110, 104, 0.20);
+}
+.srail__head {
+  padding: var(--sc-3) var(--sc-3) var(--sc-2);
+  border-bottom: 1px solid color-mix(in oklab, var(--sc-ink) 12%, transparent);
+}
+.srail__title {
+  margin: 0; font-family: var(--sc-font-text); font-weight: 600;
+  font-size: var(--sc-t-xs); letter-spacing: var(--sc-track-wide);
+  text-transform: uppercase; color: var(--sc-ink-soft); text-align: center;
+}
+.srail__body {
+  flex: 1; overflow-y: auto; padding: var(--sc-3);
+  display: flex; flex-direction: column; gap: var(--sc-4);
+  scrollbar-width: thin;
+}
+.srail__foot {
+  padding: var(--sc-3);
+  border-top: 1px solid color-mix(in oklab, var(--sc-ink) 12%, transparent);
+  background: rgba(228, 220, 215, 0.62);
+}
+.srail__foot[hidden] { display: none; }
+
+.sitem { text-align: center; }
+.sitem__media {
+  display: grid; place-items: center; height: 62px; margin-bottom: var(--sc-2);
+}
+.sitem__media img { max-width: 100%; max-height: 62px; width: auto; height: auto; object-fit: contain; }
+.sitem__n {
+  margin: 0; font-family: var(--sc-font-display); font-weight: 500;
+  font-size: 0.72rem; line-height: 1.2;
+}
+.sitem__s {
+  margin: 2px 0 3px; font-size: 0.62rem; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--sc-ink-soft);
+}
+.sitem__p {
+  display: block; margin-bottom: var(--sc-2);
+  font-weight: 600; font-size: 0.76rem; font-variant-numeric: tabular-nums;
+}
+.sitem .btn { width: 100%; font-size: 0.66rem; padding: 0.5em 0.3em; }
+
+/* once a pack is in the cart its button becomes a stepper, so the product
+   itself never leaves the rail */
+.sqty { display: flex; align-items: center; gap: 3px; }
+.sqty button {
+  flex: 1 1 auto; height: 26px; padding: 0; cursor: pointer;
+  background: none; color: var(--sc-ink); border-radius: var(--bt-r);
+  border: 1px solid color-mix(in oklab, var(--sc-ink) 26%, transparent);
+  font-size: 14px; line-height: 1;
+}
+.sqty button:hover { background: color-mix(in oklab, var(--sc-ink) 8%, transparent); }
+.sqty output {
+  flex: 0 0 1.6rem; text-align: center; font-size: 0.76rem; font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.stotal {
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  margin-bottom: var(--sc-2); font-variant-numeric: tabular-nums;
+}
+.stotal span { font-size: 0.62rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--sc-ink-soft); }
+.stotal b { font-family: var(--sc-font-display); font-size: 0.95rem; }
+.srail__foot .btn { width: 100%; font-size: 0.68rem; padding: 0.6em 0.3em; }
+
+/* a permanent rail costs a quarter of a phone screen, which is too much for a
+   page whose point is full-bleed scroll. Below this width the nav's Cart link
+   is the way in. */
+@media (max-width: 719px) { .srail { display: none; } :root { --sc-rail: 0px; } }
+
+/* ── nothing textual runs under the rail ───────────────────────────────
+   Media still passes behind it, exactly as the brochure's photography passes
+   behind its band. Only type and controls are held clear. */
+.sc-wrap { padding-right: calc(var(--sc-gutter) + var(--sc-rail) + var(--sc-rail-gap)); }
+/* a right-anchored copy block would otherwise sit directly under the rail */
+.sc-copy--trail { right: calc(var(--sc-gutter) + var(--sc-rail) + var(--sc-rail-gap)); }
+/* The two horizontal rails travel inside a viewport that stops at the band, so
+   a card is cut cleanly at its edge instead of sliding underneath it. The
+   engine derives pan travel from the full viewport width, and the rail's own
+   padding-right already adds back exactly that difference, so the last card
+   still lands flush. Scrub stages keep their full width on purpose: the
+   brochure lets photography run behind the band, and so does this. */
+[data-sc-act="pan"] [data-sc-stage],
+.benefits [data-sc-stage] { width: calc(100% - var(--sc-rail)); }
+@media (max-width: 719px) {
+  .sc-wrap { padding-right: var(--sc-gutter); }
+  .sc-copy--trail { right: var(--sc-gutter); }
+}
+
+/* ── cards recede at the band rather than being cut ────────────────────
+   A panning rail always has a part-shown card at its leading edge. Against a
+   solid band that reads as text hidden behind the panel, so instead of
+   slicing, the card shrinks and fades away as it nears the edge. Driven from
+   JS because the distance is a live measurement, not a scroll fraction. */
+.bot, .ben {
+  transform-origin: 100% 50%;
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* the engine turns a pan act into a plain scroll region here, so the
+     recede must not fight it */
+  .bot, .ben { transform: none !important; opacity: 1 !important; }
+}
+
+/* ── nav ──────────────────────────────────────────────────── */
+.bar__nav { display: flex; align-items: center; gap: var(--sc-2); }
+/* beats the generic .btn sizing so four items and a wordmark fit the bar */
+.bar__nav .btn { font-size: var(--sc-t-xs); padding: 0.62em 1.15em; }
+@media (hover: none) { .bar__nav .btn { padding: 0.85em 1.05em; } }
+
+/* the bar is fixed, so an anchor would otherwise land under it */
+#home, #shop, #journey, #cart { scroll-margin-top: 5rem; }
+
+/* ── buttons ──────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--sc-2); white-space: nowrap;
+  font-family: var(--sc-font-text); font-weight: 500;
+  font-size: var(--sc-t-sm); letter-spacing: 0.02em;
+  padding: 0.72em 1.5em; border-radius: var(--bt-r);
+  background: var(--sc-accent); color: var(--sc-accent-ink);
+  text-decoration: none; border: 1px solid var(--sc-accent-deep);
+  transition: background var(--sc-d-fast) var(--sc-ease-out),
+              transform 120ms var(--sc-ease-out);
+}
+.btn:hover { background: #EDBB8E; }
+.btn:active { transform: translateY(1px); }
+.btn--ghost {
+  background: transparent; color: var(--sc-accent-deep);
+  border-color: color-mix(in oklab, var(--sc-accent-deep) 45%, transparent);
+}
+.btn--ghost:hover { background: color-mix(in oklab, var(--sc-accent) 30%, transparent); }
+.btn--wide { width: 100%; }
+
+/* ── 1 · hero ─────────────────────────────────────────────── */
+/* `ch` resolves against the element's OWN font-size. On an unsized wrapper that
+   is the 16px body size, so `30ch` was 339px and the headline wrapped to seven
+   lines and overflowed the top of the viewport. Sized wrappers take rem. */
+.hero__copy { max-width: 40rem; }
+.hero h1 {
+  font-size: clamp(1.9rem, 4vw, 4rem); font-weight: 400;
+  line-height: 1.12; letter-spacing: -0.004em; margin: 0 0 var(--sc-4);
+}
+.hero h1 .ln { display: block; }
+.hero h1 .w  { display: inline-block; will-change: transform; }
+.hero__lede {
+  font-size: var(--sc-t-lg); color: var(--sc-ink-soft);
+  max-width: 34ch; line-height: 1.5; margin: 0 0 var(--sc-6);
+}
+/* the wave field: the signature move's visible half */
+.wave {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  z-index: 2; pointer-events: none;
+  mix-blend-mode: overlay; opacity: 0.62;
+}
+
+/* ── 2 · shop shelf (flat, opaque, no motion on a price) ──── */
+.shelf { background: var(--bt-cream); padding-block: var(--sc-7) var(--sc-8); }
+.shelf__head {
+  display: flex; flex-wrap: wrap; align-items: flex-end;
+  justify-content: space-between; gap: var(--sc-4);
+  margin-bottom: var(--sc-7);
+}
+.shelf__head h2 { font-size: var(--sc-t-2xl); margin: 0; line-height: 1.04; max-width: 18ch; }
+.shelf__note { color: var(--sc-ink-soft); font-size: var(--sc-t-sm); margin: 0; max-width: 30ch; }
+
+/* four SKUs, equal weight: no card is presented as the recommendation */
+.packs { display: grid; gap: var(--sc-5); grid-template-columns: 1fr; }
+@media (min-width: 640px)  { .packs { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .packs { grid-template-columns: repeat(4, 1fr); align-items: stretch; } }
+.pack {
+  display: flex; flex-direction: column;
+  background: var(--sc-canvas);
+  border: 1px solid color-mix(in oklab, var(--sc-ink) 12%, transparent);
+  border-radius: var(--bt-r); overflow: hidden;
+  box-shadow: var(--sc-e1);
+}
+.pack__media {
+  position: relative; display: block; width: 100%;
+  aspect-ratio: 1 / 1; max-height: 20rem;
+  overflow: hidden; background: #C5C5C5;
+}
+/* product card vid.mp4 is a square studio clip on a grey sweep. It fills the
+   whole well edge to edge, and the well is painted the sweep's own grey, so
+   there is never a grey box floating inside an ivory card. */
+.pack__vid {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+.pack__save { z-index: 2; }
+/* the four cards stretch to one height and a one-line name leaves spare room;
+   the clip takes it, so there is never an empty strip under the video */
+.pack__media { flex: 1 0 auto; }
+.pack__save {
+  position: absolute; top: var(--sc-4); left: var(--sc-4);
+  font-family: var(--sc-font-text); font-size: var(--sc-t-xs); font-weight: 600;
+  letter-spacing: var(--sc-track-wide); text-transform: uppercase;
+  color: var(--sc-accent-ink); background: var(--sc-accent);
+  padding: 0.34em 0.7em; border-radius: 2px;
+}
+.pack__body {
+  display: flex; flex-direction: column; gap: var(--sc-2);
+  padding: var(--sc-5); border-top: 1px solid color-mix(in oklab, var(--sc-ink) 10%, transparent);
+  margin-top: auto;
+}
+.pack__name { font-family: var(--sc-font-display); font-weight: 500; font-size: var(--sc-t-lg); margin: 0; line-height: 1.12; }
+.pack__size { font-size: var(--sc-t-xs); letter-spacing: var(--sc-track-wide); text-transform: uppercase; color: var(--sc-ink-soft); margin: 0; }
+.pack__price { display: flex; align-items: baseline; gap: var(--sc-2); margin: var(--sc-2) 0 var(--sc-4); font-variant-numeric: tabular-nums; }
+.pack__now { font-family: var(--sc-font-display); font-weight: 500; font-size: var(--sc-t-xl); line-height: 1; }
+.pack__was { color: var(--sc-ink-soft); text-decoration: line-through; font-size: var(--sc-t-sm); }
+
+/* ── 3 · peak ─────────────────────────────────────────────── */
+.peak__copy { max-width: 24rem; margin-left: auto; text-align: right; }
+.peak__copy h2 { font-size: clamp(1.7rem, 3vw, 3rem); line-height: 1.06; margin: 0 0 var(--sc-4); }
+.peak__list {
+  font-family: var(--sc-font-text); font-size: var(--sc-t-sm); font-weight: 400;
+  letter-spacing: var(--sc-track-wide); text-transform: uppercase;
+  color: var(--sc-ink); margin: 0; line-height: 2;
+}
+
+/* ── 4 · the five (rail) ──────────────────────────────────── */
+/* .sc-stage is a plain sticky block, so a rail without an explicit height
+   top-anchors: the figures clip under the fixed bar and half the frame is
+   empty. Filling the stage lets align-items actually centre. */
+.rail {
+  display: flex; align-items: center; gap: var(--sc-6);
+  height: 100%;
+  padding: 5.5rem 0 3rem var(--sc-gutter);
+}
+.rail > * { flex: 0 0 auto; }
+.rail__lead { max-width: 22rem; }
+.rail__lead h2 { font-size: var(--sc-t-2xl); margin: 0 0 var(--sc-3); line-height: 1.04; }
+.rail__lead p { color: var(--sc-ink-soft); margin: 0; font-size: var(--sc-t-base); }
+.bot { width: min(21rem, 76vw); }
+.bot__fig {
+  width: 9.5rem; height: 9.5rem; border-radius: 50%; overflow: hidden;
+  margin: 0 0 var(--sc-5); box-shadow: var(--sc-e2);
+  border: 1px solid color-mix(in oklab, var(--sc-ink) 10%, transparent);
+}
+.bot__fig img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bot h3 {
+  font-family: var(--sc-font-display); font-weight: 500;
+  font-size: var(--sc-t-xl); margin: 0 0 var(--sc-2); line-height: 1;
+}
+.bot__from { color: var(--sc-accent-deep); font-weight: 500; font-size: var(--sc-t-base); margin: 0 0 var(--sc-3); }
+.bot p.bot__why { color: var(--sc-ink-soft); font-size: var(--sc-t-sm); line-height: 1.62; margin: 0; }
+.rail__end { max-width: 17rem; }
+/* scrollWidth ignores a flex container's right padding, so the engine's pan
+   travel never grew to match it and the closing note could not come fully in.
+   A real spacer child does count, so the rail travels far enough to clear both
+   the band and the recede zone. */
+.rail__runout {
+  flex: 0 0 auto;
+  width: calc(var(--sc-rail) + var(--sc-recede) + 1.5rem);
+}
+.rail__end p { font-family: var(--sc-font-display); font-weight: 500; font-size: var(--sc-t-lg); line-height: 1.2; margin: 0; }
+
+/* ── 5 · benefits. The act-4 rail, travelling the other way. ───────────
+   The kit's `pan` device only ever runs right to left. This act runs left to
+   right, so it is a plain pinned act with the travel driven from --sc-p in
+   CSS. The engine is untouched.
+
+   width:max-content is load-bearing: it makes 100% resolve to the rail's
+   CONTENT width, which is what the translate needs. A block-level flex
+   container resolves 100% to the viewport, and the rail would never move.
+
+   row-reverse puts the FIRST item in the DOM at the right-hand end, so the
+   visitor still meets the lead, then the benefits in order, while the rail
+   travels rightward. Reading order in the DOM stays correct for a screen
+   reader. */
+.rail--ltr {
+  width: max-content;
+  flex-direction: row-reverse;
+  /* row-reverse puts the lead heading at the right-hand end, next to the band,
+     so it needs the recede zone cleared or it would open already faded */
+  padding-right: calc(var(--sc-gutter) + var(--sc-recede));
+  transform: translate3d(calc((100vw - var(--sc-rail) - 100%) * (1 - var(--sc-p, 0))), 0, 0);
+  will-change: transform;
+}
+.ben { width: min(21rem, 76vw); }
+.ben img {
+  width: 5.5rem; height: 5.5rem; object-fit: contain;
+  display: block; margin: 0 0 var(--sc-5);
+}
+.ben h3 {
+  font-family: var(--sc-font-display); font-weight: 500;
+  font-size: var(--sc-t-xl); line-height: 1.14; margin: 0 0 var(--sc-3);
+  text-wrap: balance;
+}
+.ben p { color: var(--sc-ink-soft); font-size: var(--sc-t-sm); line-height: 1.62; margin: 0; }
+@media (prefers-reduced-motion: reduce) {
+  /* a bespoke transform has no engine fallback, so hand the rail a real
+     scroll region the way the engine does for its own pan device */
+  .rail--ltr {
+    width: 100%; transform: none;
+    overflow-x: auto; scroll-snap-type: x proximity;
+  }
+  .rail--ltr > * { scroll-snap-align: center; }
+}
+
+/* ── 6 · close ────────────────────────────────────────────── */
+.close { background: var(--bt-cream); padding-block: var(--sc-8); }
+
+.plate { border-top: 2px solid var(--sc-ink); }
+.plate__head, .plate__row {
+  display: grid; align-items: center; gap: var(--sc-4);
+  grid-template-columns: 1fr auto;
+  padding: var(--sc-5) 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--sc-ink) 14%, transparent);
+}
+@media (min-width: 800px) {
+  .plate__head, .plate__row { grid-template-columns: 2.4fr 1fr 1fr auto; }
+}
+.plate__head {
+  padding-block: var(--sc-3); font-size: var(--sc-t-xs);
+  letter-spacing: var(--sc-track-wide); text-transform: uppercase;
+  color: var(--sc-ink-soft); border-bottom-color: color-mix(in oklab, var(--sc-ink) 22%, transparent);
+}
+.plate__head span:nth-child(2), .plate__head span:nth-child(3) { display: none; }
+@media (min-width: 800px) { .plate__head span:nth-child(2), .plate__head span:nth-child(3) { display: block; } }
+.plate__name { font-family: var(--sc-font-display); font-weight: 500; font-size: var(--sc-t-lg); line-height: 1.15; margin: 0; }
+.plate__name small { display: block; font-family: var(--sc-font-text); font-weight: 400; font-size: var(--sc-t-xs); letter-spacing: var(--sc-track-wide); text-transform: uppercase; color: var(--sc-ink-soft); margin-top: 4px; }
+.plate__cell { font-variant-numeric: tabular-nums; font-size: var(--sc-t-base); display: none; }
+@media (min-width: 800px) { .plate__cell { display: block; } }
+.plate__money { font-family: var(--sc-font-display); font-weight: 500; font-size: var(--sc-t-lg); font-variant-numeric: tabular-nums; }
+.plate__money s { display: block; font-family: var(--sc-font-text); font-weight: 300; font-size: var(--sc-t-sm); color: var(--sc-ink-soft); }
+
+.foot { padding-block: var(--sc-8) var(--sc-6); }
+.foot__grid { display: grid; gap: var(--sc-6); grid-template-columns: 1fr; }
+@media (min-width: 760px) { .foot__grid { grid-template-columns: minmax(0, 22rem); } }
+.foot h3 { font-size: var(--sc-t-xs); letter-spacing: var(--sc-track-wide); text-transform: uppercase; color: var(--sc-ink-soft); margin: 0 0 var(--sc-3); font-family: var(--sc-font-text); font-weight: 500; }
+.foot address { font-style: normal; font-size: var(--sc-t-sm); line-height: 1.7; color: var(--sc-ink-soft); }
+.foot__legal {
+  margin-top: var(--sc-7); padding-top: var(--sc-5);
+  border-top: 1px solid color-mix(in oklab, var(--sc-ink) 12%, transparent);
+  display: flex; flex-wrap: wrap; gap: var(--sc-2) var(--sc-5);
+  font-size: var(--sc-t-xs); color: var(--sc-ink-soft);
+}
+
+/* ── phone ────────────────────────────────────────────────── */
+/* The engine re-anchors .sc-copy--lead to full width below 860px, so the
+   bottom-LEFT corner gradient stops sitting under the right half of the
+   headline. It measured 2.2:1 against the brightest hero frame. Point the
+   density at the copy: the same band .sc-scrim--band paints. The engine does
+   this for --trail already; --lead needs the same treatment. */
+@media (max-width: 860px) {
+  .sc-scrim--lead {
+    background: linear-gradient(to top,
+      color-mix(in oklab, var(--sc-canvas) 95%, transparent) 0%,
+      color-mix(in oklab, var(--sc-canvas) 78%, transparent) 26%,
+      color-mix(in oklab, var(--sc-canvas) 34%, transparent) 46%,
+      transparent 62%);
+  }
+  /* The ingredient list is small uppercase text, so it owes 4.5:1, not 3:1.
+     It measured 4.35:1 against the brightest frame of the peak clip. Denser
+     band on this act only, rather than a page-wide overlay. */
+  .peak .sc-scrim--trail {
+    background: linear-gradient(to top,
+      color-mix(in oklab, var(--sc-canvas) 97%, transparent) 0%,
+      color-mix(in oklab, var(--sc-canvas) 88%, transparent) 30%,
+      color-mix(in oklab, var(--sc-canvas) 46%, transparent) 52%,
+      transparent 70%);
+  }
+}
+/* Four buttons plus a wordmark do not fit 390px with button chrome on each.
+   Drop the box on the three navigation items and keep a full tap height. */
+@media (max-width: 760px) {
+  .bar { padding-inline: var(--sc-4); gap: var(--sc-2); }
+  .bar__nav { gap: 0; }
+  .bar__nav .btn--ghost {
+    background: none; border-color: transparent;
+    padding: 0.95em 0.45em;
+  }
+  .bar__nav .btn:not(.btn--ghost) { padding: 0.75em 0.9em; }
+}
+@media (max-width: 700px) {
+  .hero h1 { font-size: var(--sc-t-2xl); }
+  .peak__copy { text-align: left; margin-left: 0; }
+  .bot__fig { width: 7.5rem; height: 7.5rem; }
+}
+/* touch: grow the tap targets */
+@media (hover: none) {
+  .btn { padding: 0.95em 1.6em; }
+}
+/* small uppercase over a photograph owes 4.5:1; this is the dark end of the
+   brochure ink family */
+.peak__list { font-weight: 600; color: #34322F; }
+/* the lede is small body text over footage on a phone, so it owes 4.5:1; the
+   brochure's own body ink clears it where the lighter soft ink measured 4.3:1 */
+.hero__lede { color: #5F5A57; }
+
+/* ── landing intro ────────────────────────────────────────────
+   The clip plays forward once over the stage, then fades to reveal the
+   scroll clip, which is parked on the same frame. */
+.hero__intro {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; z-index: 1; pointer-events: none;
+  transition: opacity 480ms var(--sc-ease-out);
+}
+.hero__intro.is-out { opacity: 0; }
+/* until the hand-off, the settled-frame poster must not show through */
+.js-intro:not(.intro-done) .hero .sc-stage__poster { opacity: 0; }
+
+/* the copy waits for the splash to settle, then rises in line by line */
+.hero__copy > * { transition: opacity 700ms var(--sc-ease-out), transform 900ms var(--sc-ease-out); }
+.hero__copy > :nth-child(2) { transition-delay: 150ms; }
+.hero__copy > :nth-child(3) { transition-delay: 280ms; }
+.js-intro:not(.intro-copy) .hero__copy > * {
+  opacity: 0; transform: translate3d(0, 18px, 0);
+  /* if the script never runs, the copy still arrives */
+  animation: introSafety 1ms 9s forwards;
+}
+@keyframes introSafety { to { opacity: 1; transform: none; } }
+
+/* ── the footage is shown exactly as encoded ──────────────────
+   No wash, no grain and no tint over any clip: colour grading is being done
+   in the footage itself. Copy that sits on a clip floats straight on it, with
+   nothing behind it, so no part of the picture is covered. */
+.sc-grain { z-index: 0; }                 /* texture now sits under the page, not over the clips */
+main { position: relative; z-index: 1; }
+
+/* the Trial Pack card shows the two-bottle render, which fills its well the
+   same way the clip fills the others */
+.pack__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ── float on hover ───────────────────────────────────────────
+   Every buyable thing lifts towards the reader under the pointer: the cards
+   on the shelf, and the rows inside the basket. Touch devices get no hover
+   state at all, so the lift never sticks on a tap. */
+.pack { transition: transform 320ms var(--sc-ease-out), box-shadow 320ms var(--sc-ease-out); }
+.pack:hover { transform: translateY(-6px); box-shadow: 0 20px 44px hsl(var(--sc-shadow-color) / 0.20); }
+.dline, .sitem {
+  border-radius: var(--bt-r);
+  transition: transform 260ms var(--sc-ease-out), box-shadow 260ms var(--sc-ease-out);
+}
+.dline:hover, .sitem:hover { transform: translateY(-3px); box-shadow: 0 12px 26px hsl(var(--sc-shadow-color) / 0.16); }
+@media (hover: none) {
+  .pack:hover, .dline:hover, .sitem:hover { transform: none; box-shadow: var(--sc-e1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pack, .dline, .sitem { transition: none; }
+  .pack:hover, .dline:hover, .sitem:hover { transform: none; }
+}
+/* the pack in flight, between the row it left and the basket */
+.flyer { position: fixed; z-index: 9999; pointer-events: none; object-fit: contain; will-change: transform, opacity; }
+
+/* ── the top band: buttons answer the pointer ─────────────────
+   A small lift and a warm wash. Nothing moves on a touch device, where a
+   hover state would stick after the tap. */
+.bar__nav .btn {
+  transition: background 200ms var(--sc-ease-out), border-color 200ms var(--sc-ease-out),
+              color 200ms var(--sc-ease-out), transform 220ms var(--sc-ease-out),
+              box-shadow 220ms var(--sc-ease-out);
+}
+.bar__nav .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px hsl(var(--sc-shadow-color) / 0.16);
+}
+.bar__nav .btn--ghost:hover {
+  background: color-mix(in oklab, var(--sc-accent) 34%, transparent);
+  border-color: var(--sc-accent-deep);
+}
+.bar__nav .btn:active { transform: translateY(0); }
+
+/* ── the cart section: each row lifts off the ledger ──────────── */
+.plate__row {
+  border-radius: var(--bt-r);
+  transition: transform 240ms var(--sc-ease-out), background 240ms var(--sc-ease-out),
+              box-shadow 240ms var(--sc-ease-out);
+}
+.plate__row:hover {
+  transform: translateY(-3px);
+  background: color-mix(in oklab, var(--sc-surface) 70%, transparent);
+  box-shadow: 0 12px 26px hsl(var(--sc-shadow-color) / 0.14);
+}
+@media (hover: none) {
+  .bar__nav .btn:hover, .plate__row:hover { transform: none; box-shadow: none; }
+  .plate__row:hover { background: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bar__nav .btn, .plate__row { transition: none; }
+  .bar__nav .btn:hover, .plate__row:hover { transform: none; }
+}
+/* the light accent cannot carry a focus ring on ivory; the deep one can */
+*:focus-visible { outline-color: var(--sc-accent-deep); }
+
+/* ── the film window in the journey ───────────────────────────
+   Three nested elements because three different things move it: the act's
+   progress slides and fades it in, an idle loop breathes, and the pointer
+   lifts it. One transform each, so none of them fights the others. */
+.ytwin {
+  position: absolute; z-index: 12;
+  left: clamp(0.75rem, 1.5vw, 1.5rem);
+  bottom: clamp(0.75rem, 1.8vh, 1.5rem);
+  width: clamp(190px, 22vw, 320px);
+  pointer-events: none;
+  /* in once the animation is properly under way, out before the closing hold */
+  --in:  clamp(0, calc((var(--sc-p, 0) - 0.14) * 7), 1);
+  --out: clamp(0, calc((0.94 - var(--sc-p, 0)) * 12), 1);
+  opacity: calc(var(--in) * var(--out));
+  transform: translate3d(0, calc((1 - var(--in)) * 34px), 0);
+  will-change: transform, opacity;
+}
+.ytwin__bob { animation: ytbob 7.5s ease-in-out infinite; }
+@keyframes ytbob { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -7px, 0); } }
+.ytwin__frame {
+  pointer-events: auto;
+  position: relative; aspect-ratio: 16 / 9; overflow: hidden;
+  border-radius: calc(var(--bt-r) * 2);
+  background: #17130F;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  box-shadow: 0 20px 48px hsl(var(--sc-shadow-color) / 0.34);
+  transform: scale(calc(0.92 + 0.08 * var(--in)));
+  transition: transform 320ms var(--sc-ease-out), box-shadow 320ms var(--sc-ease-out);
+}
+.ytwin__frame:hover {
+  transform: scale(calc(0.96 + 0.08 * var(--in)));
+  box-shadow: 0 26px 60px hsl(var(--sc-shadow-color) / 0.42);
+}
+.ytwin__frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+/* before the embed exists, a quiet placeholder rather than a black hole */
+.ytwin__frame:empty::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(120deg, #1d1813, #2a231c 60%, #1d1813);
+}
+@media (max-width: 860px) { .ytwin { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .ytwin__bob { animation: none; }
+  .ytwin__frame { transition: none; }
+}
+
+/* ── the first screen is no longer driven by scroll ───────────
+   The clip plays once and holds; the copy is simply there, on the page, and
+   stays there while the section scrolls away like any other.
+
+   The engine only dresses the stages of PINNED acts, so a flow hero has to
+   carry its own: a screen of height, and a poster that fills it rather than
+   laying out inline and setting the height to its own aspect ratio. */
+.hero [data-sc-stage] {
+  position: relative;
+  height: 100vh; height: 100svh;
+  overflow: clip;
+}
+.hero .sc-stage__poster {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+}
+
+/* the lede rides the water too: each word is its own inline block so the
+   signature move can move it, exactly as it moves the headline */
+.hero__lede .w { display: inline-block; will-change: transform; }
+
+/* ── copy that sits on a clip is set in black ─────────────────
+   Nothing is laid over the footage to help it, so the type carries the
+   contrast on its own. Black is the only value that holds across every frame
+   of both clips. */
+.hero__copy h1, .hero__lede, .peak__copy h2, .peak__list { color: #000000; }
+</style>
+</head>
+<body>
+
+<span data-sc-progress></span>
+<div class="sc-grain" aria-hidden="true"></div>
+
+<header class="bar">
+  <a class="bar__mark" href="#home" aria-label="Botanica Herbal Water, back to top">
+    <img src="assets/botanica-logo.webp" width="1200" height="313" alt="Botanica Herbal Water">
+  </a>
+  <nav class="bar__nav" aria-label="Page sections">
+    <a class="btn btn--ghost" href="#home">Home</a>
+    <a class="btn btn--ghost" href="#shop">Shop</a>
+    <a class="btn btn--ghost" href="#journey">Journey</a>
+    <a class="btn" href="#cart">Cart</a>
+  </nav>
+</header>
+
+<aside class="srail" id="shopRail" aria-label="Shop">
+  <div class="srail__head"><p class="srail__title">Shop</p></div>
+  <div class="srail__body" id="railBody"></div>
+  <div class="srail__foot" id="railFoot" hidden></div>
+</aside>
+
+<main id="top">
+
+  <!-- ─── 1 · OPEN. scrub + the wave field. Stillness, then arrival. ─── -->
+  <section class="hero" id="home" data-sc-act="flow" data-sc-drift="#F5EFEC">
+    <div data-sc-stage data-sc-wave>
+      <picture>
+        <source media="(max-width: 860px)" srcset="assets/hero-poster-m.webp">
+        <img class="sc-stage__poster" src="assets/hero-poster.webp" alt="">
+      </picture>
+      <!-- hero.mp4 is "landing page (2).mp4" REVERSED, with its settled frame
+           held for the first 1.5s. The intro video below plays the same clip
+           forward once on load and ends on that settled frame, so when it fades
+           out the scroll clip underneath is already showing the identical frame.
+           From there, scrolling down rewinds the splash as the section leaves and
+           scrolling back up plays it back in. -->
+      <video class="hero__intro" muted playsinline preload="auto" aria-hidden="true"></video>
+      <script>
+      /* inline so the poster is set during parse: the intro has to cover the
+         stage before anything else paints. Same mobile test as the engine. */
+      (function () {
+        var v = document.currentScript.previousElementSibling;
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) { v.remove(); return; }
+        var m = matchMedia("(hover: none) and (pointer: coarse)").matches || matchMedia("(max-width: 860px)").matches;
+        v.poster = m ? "assets/intro-poster-m.webp" : "assets/intro-poster.webp";
+        v.src    = m ? "assets/intro-m.mp4"        : "assets/intro.mp4";
+      })();
+      </script>
+
+      <div class="sc-copy sc-copy--lead hero__copy">
+        <h1 class="sc-display">
+          <span class="ln"><span class="w" data-wave-bob>When</span> <span class="w" data-wave-bob>your</span> <span class="w" data-wave-bob>body</span></span>
+          <span class="ln"><span class="w" data-wave-bob>asks</span> <span class="w" data-wave-bob>for</span> <span class="w" data-wave-bob>water,</span></span>
+          <span class="ln"><span class="w" data-wave-bob>nature</span> <span class="w" data-wave-bob>has</span> <span class="w" data-wave-bob>a</span> <span class="w" data-wave-bob>little</span></span>
+          <span class="ln"><span class="w" data-wave-bob>more</span> <span class="w" data-wave-bob>to</span> <span class="w" data-wave-bob>give.</span></span>
+        </h1>
+        <p class="hero__lede"><span class="w" data-wave-bob>Water,</span> <span class="w" data-wave-bob>infused</span> <span class="w" data-wave-bob>with</span> <span class="w" data-wave-bob>herbs,</span> <span class="w" data-wave-bob>roots,</span> <span class="w" data-wave-bob>spices</span> <span class="w" data-wave-bob>and</span> <span class="w" data-wave-bob>citrus</span> <span class="w" data-wave-bob>from</span> <span class="w" data-wave-bob>the</span> <span class="w" data-wave-bob>living</span> <span class="w" data-wave-bob>world.</span></p>
+        <a class="btn" href="#shop">Shop</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 2 · SHOP. flow. Flat, opaque, motionless. The quiet before the peak. ─── -->
+  <section class="sc-section shelf" id="shop" data-sc-act="flow">
+    <div class="sc-wrap">
+      <div class="shelf__head" data-sc-in data-sc-stagger="60">
+        <h2 class="sc-display">Available in 500ml and 1000ml.</h2>
+      </div>
+
+      <div class="packs" data-sc-in data-sc-stagger="70">
+
+        <article class="pack" data-thumb="assets/pack-two.webp">
+          <div class="pack__media">
+            <span class="pack__save">Save &#8377;20</span>
+            <img class="pack__img" src="assets/trial-2-bottle.webp" width="900" height="900" alt="Two Botanica Prana bottles, one litre and half litre, standing side by side.">
+          </div>
+          <div class="pack__body">
+            <h3 class="pack__name">Trial Pack</h3>
+            <p class="pack__size">1000ml &middot; Pack of 2</p>
+            <p class="pack__price">
+              <span class="pack__now">&#8377;340</span>
+              <span class="pack__was">&#8377;360</span>
+            </p>
+            <a class="btn btn--wide" href="https://botanicaproduct.com/cart/42946378727517:1">Add to cart</a>
+          </div>
+        </article>
+
+        <article class="pack" data-thumb="assets/pack-cluster.webp">
+          <div class="pack__media">
+            <span class="pack__save">Save &#8377;180</span>
+            <video class="pack__vid" src="assets/card.mp4" poster="assets/card-poster.webp" muted playsinline preload="auto" aria-hidden="true"></video>
+          </div>
+          <div class="pack__body">
+            <h3 class="pack__name">Prana Herbal Water</h3>
+            <p class="pack__size">1000ml &middot; Pack of 9</p>
+            <p class="pack__price">
+              <span class="pack__now">&#8377;1,440</span>
+              <span class="pack__was">&#8377;1,620</span>
+            </p>
+            <a class="btn btn--wide" href="https://botanicaproduct.com/cart/42887326105693:1">Add to cart</a>
+          </div>
+        </article>
+
+        <article class="pack" data-thumb="assets/pack-cluster.webp">
+          <div class="pack__media">
+            <span class="pack__save">Save &#8377;360</span>
+            <video class="pack__vid" src="assets/card.mp4" poster="assets/card-poster.webp" muted playsinline preload="auto" aria-hidden="true"></video>
+          </div>
+          <div class="pack__body">
+            <h3 class="pack__name">Prana Herbal Water</h3>
+            <p class="pack__size">500ml &middot; Pack of 12</p>
+            <p class="pack__price">
+              <span class="pack__now">&#8377;1,320</span>
+              <span class="pack__was">&#8377;1,680</span>
+            </p>
+            <a class="btn btn--wide" href="https://botanicaproduct.com/cart/42805629157469:1">Add to cart</a>
+          </div>
+        </article>
+
+        <article class="pack" data-thumb="assets/pack-cluster.webp">
+          <div class="pack__media">
+            <span class="pack__save">Save &#8377;300</span>
+            <video class="pack__vid" src="assets/card.mp4" poster="assets/card-poster.webp" muted playsinline preload="auto" aria-hidden="true"></video>
+          </div>
+          <div class="pack__body">
+            <h3 class="pack__name">Prana Herbal Water</h3>
+            <p class="pack__size">1000ml &middot; Pack of 12</p>
+            <p class="pack__price">
+              <span class="pack__now">&#8377;1,860</span>
+              <span class="pack__was">&#8377;2,160</span>
+            </p>
+            <a class="btn btn--wide" href="https://botanicaproduct.com/cart/42803083509853:1">Add to cart</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 3 · THE PEAK. scrub. Awe, then release, then silence. ─── -->
+  <!-- peak.mp4 / peak-m.mp4 carry a 27-frame (1.127s) freeze of their first
+       and last frame, baked in. That is the scroll buffer: the animation only
+       moves while this section is at least 50% on screen, and holds still
+       through the entry and exit slides. Re-encoding these clips from an
+       unpadded source removes the buffer. -->
+  <section class="peak" id="journey" data-sc-act="scrub" data-sc-span="3.4" data-sc-dwell="0.42" data-sc-drift="#E4D9D0">
+    <div data-sc-stage>
+      <img class="sc-stage__poster" src="assets/peak-poster.webp" alt="">
+      <video data-sc-scrub data-sc-src="assets/peak.mp4"
+             data-sc-src-mobile="assets/peak-m.mp4" muted playsinline></video>
+
+
+      <!-- The film sits in the clear left third of the frame. The bottle
+           travels between 0.39 and 0.62 of the clip's width and 0.10 to 1.0 of
+           its height (measured across the clip, not guessed), so this window
+           never covers it. On a phone the bottle fills the frame edge to edge
+           and there is no clear area at all, so the window is not shown. -->
+      <aside class="ytwin" aria-label="Botanica film">
+        <div class="ytwin__bob">
+          <div class="ytwin__frame" id="ytFrame"></div>
+        </div>
+      </aside>
+      <div class="sc-copy sc-copy--trail peak__copy" data-sc-cue="0.06 0.44">
+        <h2 class="sc-display">Wellness, handpicked from nature&rsquo;s garden.</h2>
+      </div>
+      <div class="sc-copy sc-copy--trail peak__copy" data-sc-cue="0.44 0.78">
+        <p class="peak__list">Vetiver<br>Cardamom<br>Cinnamon<br>Lemon<br>Clove</p>
+      </div>
+      <!-- p 0.78 to 1.0 is authored silence. The bottle has landed. -->
+    </div>
+  </section>
+
+  <!-- ─── 4 · THE FIVE. pan. Lateral travel reads as options. ─── -->
+  <section data-sc-act="pan" data-sc-span="3" data-sc-drift="#EFEAE8">
+    <div data-sc-stage>
+      <div class="rail" data-sc-pan="0.05">
+
+        <div class="rail__lead">
+          <h2 class="sc-display">Five botanicals, and a reason for each one.</h2>
+          <p>Cold infused. Never flavoured, never sweetened.</p>
+        </div>
+
+        <article class="bot">
+          <figure class="bot__fig"><img src="assets/ing-vetiver.webp" width="300" height="300" alt="Dried vetiver roots resting on a shallow water surface."></figure>
+          <h3>Vetiver</h3>
+          <p class="bot__from">From the earth, we chose Vetiver.</p>
+          <p class="bot__why">Valued for its natural cooling properties, it helps soothe inflammation and supports healthier skin, bringing a grounding effect on the mind.</p>
+        </article>
+
+        <article class="bot">
+          <figure class="bot__fig"><img src="assets/ing-cardamom.webp" width="300" height="300" alt="Green cardamom pods on a shallow water surface."></figure>
+          <h3>Cardamom</h3>
+          <p class="bot__from">From the spice gardens, we picked Cardamom.</p>
+          <p class="bot__why">Naturally aromatic and deeply restorative, it supports digestion by easing bloating, with a rich antioxidant profile that alleviates oxidative stress.</p>
+        </article>
+
+        <article class="bot">
+          <figure class="bot__fig"><img src="assets/ing-cinnamon.webp" width="300" height="300" alt="Two cinnamon quills lying on a shallow water surface."></figure>
+          <h3>Cinnamon</h3>
+          <p class="bot__from">From the bark of the Cinnamon tree, came warmth.</p>
+          <p class="bot__why">Packed with antioxidant properties, it helps protect the body from oxidative stress, regulate blood sugar levels and promote healthy digestion.</p>
+        </article>
+
+        <article class="bot">
+          <figure class="bot__fig"><img src="assets/ing-lemon.webp" width="300" height="300" alt="A cut lemon slice floating on a shallow water surface."></figure>
+          <h3>Lemon</h3>
+          <p class="bot__from">From Lemon, came zest and brightness.</p>
+          <p class="bot__why">Naturally rich in vitamin C and antioxidants, it helps strengthen immunity and protects the body from free radical damage.</p>
+        </article>
+
+        <article class="bot">
+          <figure class="bot__fig"><img src="assets/ing-clove.webp" width="300" height="300" alt="A single clove on a shallow water surface."></figure>
+          <h3>Clove</h3>
+          <p class="bot__from">In Cloves, we found strength in the smallest form.</p>
+          <p class="bot__why">Renowned for antimicrobial properties, they help fight harmful bacteria and support oral health, protecting cells from oxidative damage.</p>
+        </article>
+
+        <div class="rail__end">
+          <p>This is water, the source of life, infused with herbs, roots, spices and citrus from the living world.</p>
+        </div>
+
+        <div class="rail__runout" aria-hidden="true">&nbsp;</div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 5 · BENEFITS. The act-4 rail, running left to right. ─── -->
+  <section class="benefits" data-sc-act="pin" data-sc-span="3.48" data-sc-drift="#ECE6E2">
+    <div data-sc-stage>
+      <div class="rail rail--ltr">
+
+        <div class="rail__lead">
+          <h2 class="sc-display">Botanica brings holistic benefits.</h2>
+          <p>100% vegan. No added preservatives.</p>
+        </div>
+
+        <article class="ben">
+          <img src="assets/Lab.webp" width="127" height="125" alt="">
+          <h3>Zero Preservatives</h3>
+          <p>Made with only the purest ingredients, free from preservatives and artificial additives.</p>
+        </article>
+        <article class="ben">
+          <img src="assets/Goof.webp" width="137" height="125" alt="">
+          <h3>Vegan &amp; Cruelty-Free</h3>
+          <p>Crafted for a plant-based lifestyle, our product is 100% vegan and cruelty-free.</p>
+        </article>
+        <article class="ben">
+          <img src="assets/Lime.webp" width="125" height="125" alt="">
+          <h3>Refreshing Taste</h3>
+          <p>Enjoy crisp, refreshing herbal flavors with no added sugars or artificial sweeteners.</p>
+        </article>
+        <article class="ben">
+          <img src="assets/Health.svg" width="114" height="125" alt="">
+          <h3>Promotes Hydration Naturally</h3>
+          <p>Stay naturally refreshed and hydrated with the pure, nourishing power of herbal ingredients.</p>
+        </article>
+        <article class="ben">
+          <img src="assets/Gut.svg" width="121" height="125" alt="">
+          <h3>Supports Digestive Health</h3>
+          <p>Infused with cardamom and vetiver to gently support digestion and promote gut health.</p>
+        </article>
+        <article class="ben">
+          <img src="assets/Shield.webp" width="115" height="125" alt="">
+          <h3>Boosts Immunity</h3>
+          <p>Packed with powerful antioxidants to naturally support and strengthen your immune system.</p>
+        </article>
+
+        <div class="rail__end">
+          <p>Made without animal derived ingredients, and without added preservatives.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 6 · CLOSE. flow. The price plate. Prices do not move. ─── -->
+  <section class="close" id="cart" data-sc-act="flow">
+    <div class="sc-wrap">
+
+      <div data-sc-in>
+        <ul class="plate">
+          <li class="plate__head">
+            <span>Pack</span><span>Size</span><span>Price</span><span></span>
+          </li>
+
+          <li class="plate__row">
+            <p class="plate__name">Trial Pack<small>Prana by Botanica</small></p>
+            <span class="plate__cell">1000ml &times; 2</span>
+            <span class="plate__money">&#8377;340 <s>&#8377;360</s></span>
+            <a class="btn" href="https://botanicaproduct.com/cart/42946378727517:1">Add to cart</a>
+          </li>
+
+          <li class="plate__row">
+            <p class="plate__name">Prana Herbal Water<small>Best value per litre</small></p>
+            <span class="plate__cell">500ml &times; 12</span>
+            <span class="plate__money">&#8377;1,320 <s>&#8377;1,680</s></span>
+            <a class="btn" href="https://botanicaproduct.com/cart/42805629157469:1">Add to cart</a>
+          </li>
+
+          <li class="plate__row">
+            <p class="plate__name">Prana Herbal Water<small>Prana by Botanica</small></p>
+            <span class="plate__cell">1000ml &times; 9</span>
+            <span class="plate__money">&#8377;1,440 <s>&#8377;1,620</s></span>
+            <a class="btn" href="https://botanicaproduct.com/cart/42887326105693:1">Add to cart</a>
+          </li>
+
+          <li class="plate__row">
+            <p class="plate__name">Prana Herbal Water<small>Prana by Botanica</small></p>
+            <span class="plate__cell">1000ml &times; 12</span>
+            <span class="plate__money">&#8377;1,860 <s>&#8377;2,160</s></span>
+            <a class="btn" href="https://botanicaproduct.com/cart/42803083509853:1">Add to cart</a>
+          </li>
+        </ul>
+      </div>
+
+      <footer class="foot">
+        <div class="foot__grid">
+          <div>
+            <h3>India</h3>
+            <address>2/1B, Kallur, Vennur,<br>Annamanada P.O, Chalakudy,<br>Kerala, India 680741<br><a href="tel:+919567944422">+91 9567944422</a></address>
+          </div>
+        </div>
+        <div class="foot__legal">
+          <span>Botanica Global Products Pvt. Ltd.</span>
+          <span>100% vegan</span>
+          <span>No added preservatives</span>
+          <a href="mailto:info@botanicaproduct.com">info@botanicaproduct.com</a>
+        </div>
+      </footer>
+
+    </div>
+  </section>
+
+</main>
+
+<script src="scrollcraft.js"></script>
+<script>
+ScrollCraft.mount(document.body);
+
+/* ═══════════════════════════════════════════════════════════════
+   SIGNATURE MOVE · the hero water answers the pointer.
+
+   A damped two-buffer wave field runs over the hero clip. The pointer
+   injects impulses that propagate as real rings and decay. Two things read
+   off it: the field is composited over the footage as caustic light, and
+   each word of the headline samples the wave height beneath its own centre
+   and bobs with it, so the type floats on the water rather than sitting
+   over it.
+
+   Not constructed at all on touch or under reduced motion.
+   ═══════════════════════════════════════════════════════════════ */
+(function () {
+  var stage = document.querySelector('[data-sc-wave]');
+  if (!stage) return;
+  if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var W = 132, H = 74, N = W * H;
+  var cv = document.createElement('canvas');
+  cv.className = 'wave';
+  cv.width = W; cv.height = H;
+  cv.setAttribute('aria-hidden', 'true');
+  stage.appendChild(cv);
+
+  var ctx = cv.getContext('2d');
+  var img = ctx.createImageData(W, H);
+  var a = new Float32Array(N), b = new Float32Array(N);
+  var DAMP = 0.974;
+
+  function drop(cx, cy, amp) {
+    cx = Math.round(cx); cy = Math.round(cy);
+    for (var y = -2; y <= 2; y++) {
+      for (var x = -2; x <= 2; x++) {
+        var px = cx + x, py = cy + y;
+        if (px < 1 || py < 1 || px >= W - 1 || py >= H - 1) continue;
+        var d = Math.sqrt(x * x + y * y);
+        if (d > 2.4) continue;
+        a[py * W + px] += amp * (1 - d / 2.4);
+      }
+    }
+  }
+
+  var lx = -99, ly = -99;
+  stage.addEventListener('pointermove', function (e) {
+    if (e.pointerType === 'touch') return;
+    var r = stage.getBoundingClientRect();
+    var gx = (e.clientX - r.left) / r.width * W;
+    var gy = (e.clientY - r.top) / r.height * H;
+    var dx = gx - lx, dy = gy - ly;
+    if (dx * dx + dy * dy < 0.55) return;
+    lx = gx; ly = gy;
+    drop(gx, gy, 1.15);
+  }, { passive: true });
+
+  /* Word positions are measured relative to the stage, not per frame:
+     reading a rect after writing a transform forces a reflow every frame. */
+  var words = [].slice.call(document.querySelectorAll('[data-wave-bob]'));
+  var pos = [];
+  function measure() {
+    var r = stage.getBoundingClientRect();
+    pos = words.map(function (w) {
+      var q = w.getBoundingClientRect();
+      return {
+        x: Math.round((q.left + q.width / 2 - r.left) / r.width * W),
+        y: Math.round((q.top + q.height / 2 - r.top) / r.height * H)
+      };
+    });
+  }
+  addEventListener('resize', measure, { passive: true });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  setTimeout(measure, 700);
+
+  var raf = 0, seen = true;
+
+  function frame() {
+    for (var y = 1; y < H - 1; y++) {
+      var yw = y * W;
+      for (var x = 1; x < W - 1; x++) {
+        var i = yw + x;
+        b[i] = ((a[i - 1] + a[i + 1] + a[i - W] + a[i + W]) * 0.5 - b[i]) * DAMP;
+      }
+    }
+    var t = a; a = b; b = t;
+
+    var d = img.data;
+    for (var y2 = 1; y2 < H - 1; y2++) {
+      var yw2 = y2 * W;
+      for (var x2 = 1; x2 < W - 1; x2++) {
+        var j = yw2 + x2;
+        var v = (a[j - 1] - a[j + 1] + a[j - W] - a[j + W]) * 44;
+        if (v > 92) v = 92; else if (v < -92) v = -92;
+        var o = j * 4, c = 128 + v;
+        d[o] = c; d[o + 1] = c; d[o + 2] = c; d[o + 3] = 255;
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+
+    for (var k = 0; k < pos.length; k++) {
+      var p = pos[k];
+      if (!p || p.x < 1 || p.y < 1 || p.x >= W - 1 || p.y >= H - 1) continue;
+      var h = a[p.y * W + p.x] * 3.4;
+      if (h > 7) h = 7; else if (h < -7) h = -7;
+      words[k].style.transform = 'translate3d(0,' + (-h).toFixed(2) + 'px,0)';
+    }
+
+    raf = seen ? requestAnimationFrame(frame) : 0;
+  }
+
+  new IntersectionObserver(function (es) {
+    seen = es[0].isIntersecting;
+    if (seen && !raf) raf = requestAnimationFrame(frame);
+  }, { threshold: 0 }).observe(stage);
+
+  /* Three drops as the page settles, so the surface reads as live before the
+     visitor has moved anything. Then it goes still and waits for them. */
+  setTimeout(function () { drop(W * 0.62, H * 0.34, 2.6); }, 500);
+  setTimeout(function () { drop(W * 0.28, H * 0.62, 1.9); }, 1150);
+  setTimeout(function () { drop(W * 0.80, H * 0.72, 1.5); }, 1800);
+
+  raf = requestAnimationFrame(frame);
+})();
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   Permanent shop rail.
+
+   The catalogue is READ OUT OF THE PAGE rather than restated here, so prices
+   live in exactly one place and cannot drift between the shelf, the price
+   plate and this rail.
+
+   The rail never swaps to a cart view: adding a pack turns that pack's button
+   into a stepper and leaves every product where it was.
+   ═══════════════════════════════════════════════════════════════ */
+(function () {
+  var KEY = "botanica.cart.v1";
+  var STORE = "https://botanicaproduct.com/cart/";
+
+  var body = document.getElementById("railBody");
+  var foot = document.getElementById("railFoot");
+  if (!body || !foot) return;
+
+  function money(t) { return Number(String(t).replace(/[^0-9]/g, "")) || 0; }
+  function inr(n) { return "\u20B9" + n.toLocaleString("en-IN"); }
+  function esc(t) {
+    return String(t).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+
+  var catalog = [].slice.call(document.querySelectorAll(".pack")).map(function (el) {
+    var a = el.querySelector('a[href*="/cart/"]');
+    var m = a && a.getAttribute("href").match(/\/cart\/(\d+):/);
+    return {
+      id:    m ? m[1] : "",
+      name:  el.querySelector(".pack__name").textContent.trim(),
+      size:  el.querySelector(".pack__size").textContent.trim(),
+      price: money(el.querySelector(".pack__now").textContent),
+      img:   el.getAttribute("data-thumb") || el.querySelector(".pack__media video").getAttribute("poster")
+    };
+  }).filter(function (p) { return p.id; });
+
+  /* localStorage throws in private windows and when site data is blocked */
+  function loadCart() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(cart)); } catch (e) {} }
+  var cart = loadCart();
+
+  function find(id) {
+    for (var i = 0; i < catalog.length; i++) if (catalog[i].id === id) return catalog[i];
+    return null;
+  }
+  function units() { var n = 0; for (var k in cart) n += cart[k]; return n; }
+  function lines() {
+    return Object.keys(cart).filter(function (id) { return cart[id] > 0 && find(id); });
+  }
+
+  function render() {
+    body.innerHTML = catalog.map(function (p) {
+      var q = cart[p.id] || 0;
+      var action = q
+        ? '<div class="sqty">' +
+            '<button type="button" data-dec="' + p.id + '" aria-label="Remove one ' + esc(p.name) + '">&#8722;</button>' +
+            '<output aria-label="' + esc(p.name) + ' in cart">' + q + '</output>' +
+            '<button type="button" data-inc="' + p.id + '" aria-label="Add one ' + esc(p.name) + '">+</button>' +
+          '</div>'
+        : '<button class="btn" type="button" data-add="' + p.id + '">Add to cart</button>';
+      return '<div class="sitem">' +
+        '<div class="sitem__media"><img src="' + p.img + '" alt=""></div>' +
+        '<p class="sitem__n">' + esc(p.name) + '</p>' +
+        '<p class="sitem__s">' + esc(p.size) + '</p>' +
+        '<span class="sitem__p">' + inr(p.price) + '</span>' +
+        action + '</div>';
+    }).join("");
+
+    var ids = lines(), n = units(), total = 0;
+    ids.forEach(function (id) { total += find(id).price * cart[id]; });
+
+    foot.hidden = n === 0;
+    if (n) {
+      foot.innerHTML =
+        '<p class="stotal"><span>' + n + ' item' + (n > 1 ? "s" : "") + '</span><b>' + inr(total) + '</b></p>' +
+        '<a class="btn" href="' + STORE +
+          ids.map(function (id) { return id + ":" + cart[id]; }).join(",") + '">Checkout</a>';
+    }
+  }
+
+  function bump(id, by) {
+    if (!find(id)) return;
+    cart[id] = Math.max(0, (cart[id] || 0) + by);
+    if (!cart[id]) delete cart[id];
+    save(); render();
+  }
+
+  body.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-add],button[data-inc],button[data-dec]");
+    if (!b) return;
+    if (b.dataset.add) bump(b.dataset.add, 1);
+    else if (b.dataset.inc) bump(b.dataset.inc, 1);
+    else bump(b.dataset.dec, -1);
+  });
+
+  /* Every "Add to cart" on the page is a Shopify permalink. Intercept them so
+     they fill this cart instead of leaving the site on the first click; the
+     Checkout button then hands Shopify the whole basket at once. */
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest('a[href*="botanicaproduct.com/cart/"]');
+    if (!a || body.contains(a) || foot.contains(a)) return;
+    var m = a.getAttribute("href").match(/\/cart\/(\d+):(\d+)$/);
+    if (!m) return;
+    e.preventDefault();
+    bump(m[1], Number(m[2]) || 1);
+  });
+
+  render();
+
+})();
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   Rail edge: cards recede rather than being cut by the band.
+
+   A card's distance from the stage's right edge is a live measurement, not a
+   scroll fraction, so this runs off the same rAF as scroll rather than off any
+   act's progress. Both rails are handled: the ingredients rail travels left so
+   cards ARRIVE at this edge, the benefits rail travels right so they LEAVE
+   through it. Either way nothing is ever sliced.
+   ═══════════════════════════════════════════════════════════════ */
+(function () {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  var rails = [].slice.call(document.querySelectorAll(".rail, .rail--ltr"))
+    .map(function (r) { return { stage: r.parentElement, cards: [].slice.call(r.children) }; })
+    .filter(function (r) { return r.stage && r.cards.length; });
+  if (!rails.length) return;
+
+  var zone = parseFloat(getComputedStyle(document.documentElement)
+    .getPropertyValue("--sc-recede")) || 150;
+
+  var queued = false;
+  function paint() {
+    queued = false;
+    for (var i = 0; i < rails.length; i++) {
+      var st = rails[i].stage.getBoundingClientRect();
+      if (st.bottom < -200 || st.top > innerHeight + 200) continue;   // offscreen act
+      var edge = st.right;
+      var cards = rails[i].cards;
+      for (var j = 0; j < cards.length; j++) {
+        var c = cards[j], r = c.getBoundingClientRect();
+        if (r.right < -400 || r.left > edge + 600) { c.style.opacity = ""; c.style.transform = ""; continue; }
+        // how far the card's LEADING (right) side has pushed into the zone
+        var into = r.right - (edge - zone);
+        if (into <= 0) { c.style.opacity = ""; c.style.transform = ""; continue; }
+        var t = Math.min(1, into / (zone + r.width * 0.35));   // 0 = untouched, 1 = gone
+        var o = Math.max(0, 1 - t * 1.25);
+        c.style.opacity = o.toFixed(3);
+        c.style.transform = "scale(" + (1 - 0.16 * t).toFixed(4) + ")";
+      }
+    }
+  }
+  function req() { if (!queued) { queued = true; requestAnimationFrame(paint); } }
+
+  addEventListener("scroll", req, { passive: true });
+  addEventListener("resize", req);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(req);
+  setTimeout(req, 400);
+  req();
+})();
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   The landing clip.
+
+   It plays once as the page opens and then holds its last frame: the settled
+   bottle on still water. Nothing about it is tied to scroll any more, so the
+   hero simply pins for its span while the copy is read. The headline waits
+   for the splash to settle before it rises in, and arrives anyway if the clip
+   never starts.
+   ═══════════════════════════════════════════════════════════════ */
+(function () {
+  var root = document.documentElement;
+  var v = document.querySelector(".hero__intro");
+  if (!v || !root.classList.contains("js-intro")) {
+    root.classList.add("intro-copy", "intro-done");
+    return;
+  }
+  var COPY_AT = 3.0;                       /* seconds: the splash has settled */
+  function reveal() { root.classList.add("intro-copy", "intro-done"); }
+
+  v.addEventListener("timeupdate", function () { if (v.currentTime >= COPY_AT) reveal(); });
+  v.addEventListener("ended", reveal);
+  v.addEventListener("error", reveal);
+  var p = v.play();
+  if (p && p.catch) p.catch(reveal);       /* autoplay refused: never block the copy */
+  setTimeout(function () { if (v.currentTime < 0.05) reveal(); }, 5000);   /* stalled */
+})();
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   Product card clips.
+
+   Each card plays once it is 60% in view, so on a desktop row the four go
+   together and on a phone each card waits for its own turn. The start is
+   held back 380ms so the shelf's own fade-in has finished before anything
+   moves, and cards that arrive together cascade left to right 160ms apart
+   rather than firing in unison. The clip holds its last frame. A card only
+   rearms once it has left the screen completely, so scrolling a few pixels
+   either way never restarts it.
+   ═══════════════════════════════════════════════════════════════ */
+(function () {
+  var vids = [].slice.call(document.querySelectorAll(".pack__vid"));
+  if (!vids.length || !("IntersectionObserver" in window)) return;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;   /* poster only */
+
+  var BASE = 380, STEP = 160;
+
+  function start(list) {
+    list.forEach(function (v, i) {
+      v._armed = false;
+      v._t = setTimeout(function () {
+        try { v.currentTime = 0; } catch (e) {}
+        var p = v.play();
+        if (p && p.catch) p.catch(function () {});
+      }, BASE + i * STEP);
+    });
+  }
+  function rearm(v) {
+    clearTimeout(v._t);
+    v.pause();
+    try { v.currentTime = 0; } catch (e) {}
+    v._armed = true;
+  }
+
+  var io = new IntersectionObserver(function (es) {
+    var go = [];
+    es.forEach(function (e) {
+      var v = e.target._vid;
+      if (e.intersectionRatio >= 0.6 && v._armed) go.push(v);
+      else if (!e.isIntersecting && !v._armed) rearm(v);
+    });
+    go.sort(function (a, b) { return vids.indexOf(a) - vids.indexOf(b); });
+    if (go.length) start(go);
+  }, { threshold: [0, 0.6] });
+
+  vids.forEach(function (v) {
+    v._armed = true;
+    var card = v.closest(".pack") || v;
+    card._vid = v;
+    io.observe(card);
+  });
+})();
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   Adding from the basket: the pack flies into it.
+
+   This listens in the CAPTURE phase, ahead of the cart's own handler, for one
+   reason: that handler rebuilds the basket's markup on the same click, which
+   destroys the row that was clicked. The image is cloned into a fixed ghost
+   while the row still exists, so the flight has something to show. The
+   destination only has a box once the rebuild has happened, hence the two
+   frames of wait before the animation is built.
+   ═══════════════════════════════════════════════════════════════ */
+(function () {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!Element.prototype.animate) return;
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-add], button[data-inc]");
+    if (!btn) return;
+    var row = btn.closest(".dline, .sitem");          /* drawer line or band item */
+    if (!row) return;
+    var img = row.querySelector("img");
+    if (!img) return;
+    var a = img.getBoundingClientRect();
+    if (!a.width || !a.height) return;
+
+    var ghost = img.cloneNode(true);
+    ghost.className = "flyer";
+    ghost.removeAttribute("width"); ghost.removeAttribute("height");
+    ghost.style.left = a.left + "px";
+    ghost.style.top = a.top + "px";
+    ghost.style.width = a.width + "px";
+    ghost.style.height = a.height + "px";
+    document.body.appendChild(ghost);
+
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      var dest = document.querySelector("#cartFoot:not([hidden]), #railFoot:not([hidden])")
+              || document.querySelector("#cartFab, .srail__foot, .drawer__foot");
+      var b = dest ? dest.getBoundingClientRect() : { left: innerWidth - 60, top: 40, width: 40, height: 40 };
+      var dx = (b.left + b.width / 2) - (a.left + a.width / 2);
+      var dy = (b.top + b.height / 2) - (a.top + a.height / 2);
+      var anim = ghost.animate([
+        { transform: "translate3d(0,0,0) scale(1)", opacity: 1 },
+        { transform: "translate3d(" + (dx * 0.45).toFixed(1) + "px," + (dy * 0.45 - 48).toFixed(1) + "px,0) scale(0.72)",
+          opacity: 0.95, offset: 0.55 },
+        { transform: "translate3d(" + dx.toFixed(1) + "px," + dy.toFixed(1) + "px,0) scale(0.16)", opacity: 0.1 }
+      ], { duration: 620, easing: "cubic-bezier(0.32, 0.72, 0, 1)" });
+      anim.onfinish = anim.oncancel = function () { ghost.remove(); };
+    }); });
+
+    /* if anything above throws or the tab is hidden mid-flight, the ghost still goes */
+    setTimeout(function () { if (ghost.isConnected) ghost.remove(); }, 1800);
+  }, true);
+})();
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   The film window in the journey section.
+
+   The embed is built only when the section is within a screen of the
+   viewport, so an ordinary visit to the top of the page never calls out to
+   YouTube. It is muted, because an autoplaying clip with sound is a way to
+   lose a reader, and it is not autoplayed at all under reduced motion.
+   nocookie is used so a viewer is not tracked before they choose to play.
+   ═══════════════════════════════════════════════════════════════ */
+(function () {
+  var host = document.getElementById("ytFrame");
+  if (!host) return;
+  var act = host.closest("[data-sc-act]");
+  if (!act || !("IntersectionObserver" in window)) return;
+
+  var built = false;
+
+  function build() {
+    if (built) return;
+    built = true;
+    var f = document.createElement("iframe");
+    f.src = "https://www.youtube-nocookie.com/embed/uZGehNqy2dU"
+          + "?start=4&loop=1&playlist=uZGehNqy2dU&controls=1"
+          + "&modestbranding=1&rel=0&playsinline=1";   /* click to play: never autoplay */
+    f.title = "Botanica Prana, the film";
+    f.allow = "autoplay; encrypted-media; picture-in-picture";
+    f.referrerPolicy = "strict-origin-when-cross-origin";
+    f.setAttribute("allowfullscreen", "");
+    f.setAttribute("loading", "lazy");
+    host.appendChild(f);
+  }
+
+  new IntersectionObserver(function (es) {
+    if (es[0].isIntersecting) build();
+  }, { rootMargin: "300px 0px" }).observe(act);
+})();
+</script>
+</body>
+</html>
