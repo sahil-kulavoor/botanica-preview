@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Botanica &middot; Prana &middot; previews</title>
+<meta name="description" content="Four preview builds of the Botanica Prana landing page.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%239A5430'/><path d='M16 7c4 4 6 7 6 10a6 6 0 0 1-12 0c0-3 2-6 6-10z' fill='%23F3CBA6'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f%5B%5D=erode@400,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --canvas: #F5EFEC; --surface: #ECE6E2; --ink: #4D4B48; --strong: #33312E;
+    --soft: #6E6965; --accent: #F3CBA6; --deep: #9A5430;
+    --disp: "Erode", Georgia, serif; --text: "Manrope", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--canvas); color: var(--ink);
+    font-family: var(--text); line-height: 1.6;
+    padding: clamp(2rem, 7vw, 6rem) clamp(1.25rem, 5vw, 4rem);
+  }
+  .wrap { max-width: 62rem; margin-inline: auto; }
+  .eyebrow {
+    font-weight: 600; font-size: 0.72rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--deep); margin: 0 0 1rem;
+  }
+  h1 {
+    font-family: var(--disp); font-weight: 400; color: var(--strong);
+    font-size: clamp(1.9rem, 5vw, 3.4rem); line-height: 1.08;
+    letter-spacing: -0.012em; margin: 0 0 1rem; max-width: 24ch;
+  }
+  .lede { font-size: 1.05rem; color: var(--soft); margin: 0 0 3rem; max-width: 46ch; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+  @media (min-width: 720px) { ul { grid-template-columns: 1fr 1fr; } }
+  .card__link {
+    display: flex; flex-direction: column; height: 100%; gap: 0.4rem;
+    padding: 1.5rem 1.6rem 1.4rem; text-decoration: none; color: inherit;
+    background: var(--surface); border: 1px solid rgba(77, 75, 72, 0.14);
+    border-radius: 3px;
+    transition: transform 240ms cubic-bezier(.23,1,.32,1), box-shadow 240ms cubic-bezier(.23,1,.32,1);
+  }
+  .card__link:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(87, 76, 66, 0.16); }
+  .card h2 {
+    font-family: var(--disp); font-weight: 500; color: var(--strong);
+    font-size: 1.45rem; margin: 0; line-height: 1.15;
+  }
+  .card p { margin: 0; color: var(--soft); font-size: 0.92rem; }
+  .card__go {
+    margin-top: auto; padding-top: 0.9rem; font-weight: 600; font-size: 0.74rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--deep);
+  }
+  .notes {
+    margin-top: 3rem; padding-top: 1.4rem; border-top: 1px solid rgba(77, 75, 72, 0.14);
+    font-size: 0.86rem; color: var(--soft);
+  }
+  .notes p { margin: 0 0 0.5rem; max-width: 60ch; }
+  @media (prefers-reduced-motion: reduce) { .card__link { transition: none; } .card__link:hover { transform: none; } }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="eyebrow">Botanica &middot; Prana</p>
+    <h1>Four builds of the same landing page.</h1>
+    <p class="lede">Same words, same films, same palette. What changes is how the shop
+      behaves and, in the last one, how much of the page answers the scroll wheel.</p>
+
+    <ul>
+        <li class="card">
+          <a class="card__link" href="band/">
+            <h2>Shop band</h2>
+            <p>A brochure-style shop band pinned down the right edge, on screen at all times.</p>
+            <span class="card__go">Open preview</span>
+          </a>
+        </li>
+        <li class="card">
+          <a class="card__link" href="pull-tab/">
+            <h2>Pull tab</h2>
+            <p>The shop hides behind a frosted tab on the right edge. Hover or click it to open.</p>
+            <span class="card__go">Open preview</span>
+          </a>
+        </li>
+        <li class="card">
+          <a class="card__link" href="bottle-button/">
+            <h2>Floating bottle</h2>
+            <p>A floating bottle button, bottom right, opening a cart drawer.</p>
+            <span class="card__go">Open preview</span>
+          </a>
+        </li>
+        <li class="card">
+          <a class="card__link" href="static/">
+            <h2>Static option</h2>
+            <p>Nothing follows the scroll wheel: both films play by themselves and the shop shows stills.</p>
+            <span class="card__go">Open preview</span>
+          </a>
+        </li>
+    </ul>
+
+    <div class="notes">
+      <p><strong>Best on a desktop browser.</strong> The layout adapts down to phones,
+        but the films and the side-by-side shop are built for a wide screen.</p>
+      <p>Each build loads two short films, so give the first screen a moment on a slow
+        connection. The film in the Journey section is embedded from YouTube.</p>
+      <p>The &ldquo;Add to cart&rdquo; buttons build real links to the Botanica store, so
+        checking out leaves the preview and lands on the live shop.</p>
+    </div>
+  </div>
+</body>
+</html>
