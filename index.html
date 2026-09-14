@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Botanica &middot; Prana &middot; previews</title>
-<meta name="description" content="Four preview builds of the Botanica Prana landing page.">
+<title>Botanica Website Demo</title>
+<meta name="description" content="Botanica Prana website demo.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%239A5430'/><path d='M16 7c4 4 6 7 6 10a6 6 0 0 1-12 0c0-3 2-6 6-10z' fill='%23F3CBA6'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,100 +15,136 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --canvas: #F5EFEC; --surface: #ECE6E2; --ink: #4D4B48; --strong: #33312E;
-    --soft: #6E6965; --accent: #F3CBA6; --deep: #9A5430;
-    --disp: "Erode", Georgia, serif; --text: "Manrope", system-ui, sans-serif;
+    /* a soft peach ground, warmed a step further than the brochure ivory */
+    --peach:  #FAEFE6;
+    --ink:    #4A4642;
+    --strong: #2F2C29;
+    --soft:   #635D58;
+    --deep:   #9A5430;
+    --disp: "Erode", Georgia, "Times New Roman", serif;
+    --text: "Manrope", system-ui, sans-serif;
   }
   * { box-sizing: border-box; }
+  html { color-scheme: light; }
   body {
-    margin: 0; background: var(--canvas); color: var(--ink);
+    margin: 0; min-height: 100vh;
+    background: var(--peach);
+    color: var(--ink);
     font-family: var(--text); line-height: 1.6;
-    padding: clamp(2rem, 7vw, 6rem) clamp(1.25rem, 5vw, 4rem);
+    padding: clamp(2.25rem, 7vw, 6rem) clamp(1.25rem, 5vw, 4rem);
   }
+  /* Very soft washes of warmth. Glass needs something behind it to refract:
+     over a flat fill a blur has nothing to do and the cards read as plain
+     boxes. These stay faint enough that the page still looks like one colour. */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(58% 48% at 12% 8%,  rgba(243, 203, 166, 0.55), transparent 70%),
+      radial-gradient(48% 44% at 88% 22%, rgba(232, 214, 196, 0.50), transparent 72%),
+      radial-gradient(64% 52% at 72% 96%, rgba(246, 219, 196, 0.45), transparent 70%),
+      radial-gradient(40% 36% at 30% 70%, rgba(198, 226, 214, 0.22), transparent 72%);
+  }
+
   .wrap { max-width: 62rem; margin-inline: auto; }
-  .eyebrow {
-    font-weight: 600; font-size: 0.72rem; letter-spacing: 0.2em;
-    text-transform: uppercase; color: var(--deep); margin: 0 0 1rem;
-  }
+
+  .mark { display: block; margin: 0 0 clamp(1.5rem, 4vw, 2.5rem); }
+  .mark img { display: block; height: clamp(34px, 4.4vw, 52px); width: auto; }
+
   h1 {
     font-family: var(--disp); font-weight: 400; color: var(--strong);
-    font-size: clamp(1.9rem, 5vw, 3.4rem); line-height: 1.08;
-    letter-spacing: -0.012em; margin: 0 0 1rem; max-width: 24ch;
+    font-size: clamp(2rem, 5.2vw, 3.6rem); line-height: 1.06;
+    letter-spacing: -0.014em; margin: 0 0 0.85rem;
   }
-  .lede { font-size: 1.05rem; color: var(--soft); margin: 0 0 3rem; max-width: 46ch; }
-  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+  .lede {
+    font-size: clamp(1rem, 1.4vw, 1.12rem); color: var(--soft);
+    margin: 0 0 clamp(2.25rem, 5vw, 3.5rem); max-width: 44ch;
+  }
+
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(0.9rem, 1.6vw, 1.25rem); }
   @media (min-width: 720px) { ul { grid-template-columns: 1fr 1fr; } }
+
+  /* frosted glass: a translucent pane, a lit top edge, and two shadows so it
+     sits above the page rather than being painted on it */
   .card__link {
-    display: flex; flex-direction: column; height: 100%; gap: 0.4rem;
-    padding: 1.5rem 1.6rem 1.4rem; text-decoration: none; color: inherit;
-    background: var(--surface); border: 1px solid rgba(77, 75, 72, 0.14);
-    border-radius: 3px;
-    transition: transform 240ms cubic-bezier(.23,1,.32,1), box-shadow 240ms cubic-bezier(.23,1,.32,1);
+    position: relative; display: flex; flex-direction: column; height: 100%;
+    gap: 0.45rem; padding: 1.6rem 1.7rem 1.5rem;
+    text-decoration: none; color: inherit;
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.40));
+    backdrop-filter: blur(18px) saturate(1.35);
+    -webkit-backdrop-filter: blur(18px) saturate(1.35);
+    border: 1px solid rgba(255, 255, 255, 0.70);
+    border-radius: 14px;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.75) inset,
+      0 10px 26px rgba(104, 74, 51, 0.11),
+      0 2px 6px rgba(104, 74, 51, 0.07);
+    transition: transform 260ms cubic-bezier(.23,1,.32,1), box-shadow 260ms cubic-bezier(.23,1,.32,1),
+                background 260ms cubic-bezier(.23,1,.32,1);
   }
-  .card__link:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(87, 76, 66, 0.16); }
+  .card__link:hover {
+    transform: translateY(-5px);
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.52));
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.85) inset,
+      0 20px 44px rgba(104, 74, 51, 0.16),
+      0 4px 10px rgba(104, 74, 51, 0.08);
+  }
+  .card__link:focus-visible { outline: 2px solid var(--deep); outline-offset: 3px; }
+
   .card h2 {
     font-family: var(--disp); font-weight: 500; color: var(--strong);
-    font-size: 1.45rem; margin: 0; line-height: 1.15;
+    font-size: clamp(1.3rem, 2vw, 1.55rem); line-height: 1.14; margin: 0;
   }
-  .card p { margin: 0; color: var(--soft); font-size: 0.92rem; }
+  .card p { margin: 0; color: var(--soft); font-size: 0.94rem; }
   .card__go {
-    margin-top: auto; padding-top: 0.9rem; font-weight: 600; font-size: 0.74rem;
-    letter-spacing: 0.1em; text-transform: uppercase; color: var(--deep);
+    margin-top: auto; padding-top: 1rem;
+    font-weight: 600; font-size: 0.74rem; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--deep);
   }
-  .notes {
-    margin-top: 3rem; padding-top: 1.4rem; border-top: 1px solid rgba(77, 75, 72, 0.14);
-    font-size: 0.86rem; color: var(--soft);
+
+  @media (prefers-reduced-motion: reduce) {
+    .card__link { transition: none; }
+    .card__link:hover { transform: none; }
   }
-  .notes p { margin: 0 0 0.5rem; max-width: 60ch; }
-  @media (prefers-reduced-motion: reduce) { .card__link { transition: none; } .card__link:hover { transform: none; } }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <p class="eyebrow">Botanica &middot; Prana</p>
-    <h1>Four builds of the same landing page.</h1>
-    <p class="lede">Same words, same films, same palette. What changes is how the shop
-      behaves and, in the last one, how much of the page answers the scroll wheel.</p>
+    <p class="mark"><img src="assets/botanica-logo.webp" width="1200" height="313" alt="Botanica Herbal Water"></p>
+
+    <h1>Botanica Website Demo</h1>
+    <p class="lede">Four builds, click on each to preview it</p>
 
     <ul>
-        <li class="card">
-          <a class="card__link" href="band/">
-            <h2>Shop band</h2>
-            <p>A brochure-style shop band pinned down the right edge, on screen at all times.</p>
-            <span class="card__go">Open preview</span>
-          </a>
-        </li>
-        <li class="card">
-          <a class="card__link" href="pull-tab/">
-            <h2>Pull tab</h2>
-            <p>The shop hides behind a frosted tab on the right edge. Hover or click it to open.</p>
-            <span class="card__go">Open preview</span>
-          </a>
-        </li>
-        <li class="card">
-          <a class="card__link" href="bottle-button/">
-            <h2>Floating bottle</h2>
-            <p>A floating bottle button, bottom right, opening a cart drawer.</p>
-            <span class="card__go">Open preview</span>
-          </a>
-        </li>
-        <li class="card">
-          <a class="card__link" href="static/">
-            <h2>Static option</h2>
-            <p>Nothing follows the scroll wheel: both films play by themselves and the shop shows stills.</p>
-            <span class="card__go">Open preview</span>
-          </a>
-        </li>
+      <li class="card">
+        <a class="card__link" href="band/">
+          <h2>Permanent Shop</h2>
+          <p>A brochure-style shop band pinned down the right edge, on screen at all times.</p>
+          <span class="card__go">Open preview</span>
+        </a>
+      </li>
+      <li class="card">
+        <a class="card__link" href="pull-tab/">
+          <h2>Open on Hover shop</h2>
+          <p>The shop hides behind a frosted tab on the right edge. Hover or click it to open.</p>
+          <span class="card__go">Open preview</span>
+        </a>
+      </li>
+      <li class="card">
+        <a class="card__link" href="bottle-button/">
+          <h2>Botanica Bottle Shop</h2>
+          <p>A floating bottle button, bottom right, opening a cart drawer.</p>
+          <span class="card__go">Open preview</span>
+        </a>
+      </li>
+      <li class="card">
+        <a class="card__link" href="static/">
+          <h2>Static Option</h2>
+          <p>Nothing follows the scroll wheel: both films play by themselves and the shop shows stills.</p>
+          <span class="card__go">Open preview</span>
+        </a>
+      </li>
     </ul>
-
-    <div class="notes">
-      <p><strong>Best on a desktop browser.</strong> The layout adapts down to phones,
-        but the films and the side-by-side shop are built for a wide screen.</p>
-      <p>Each build loads two short films, so give the first screen a moment on a slow
-        connection. The film in the Journey section is embedded from YouTube.</p>
-      <p>The &ldquo;Add to cart&rdquo; buttons build real links to the Botanica store, so
-        checking out leaves the preview and lands on the live shop.</p>
-    </div>
   </div>
 </body>
 </html>
